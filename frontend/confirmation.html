@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knuckle Sandwich - Confirmation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="home.html" class="nav-logo">Knuckle Sandwich</a>
+            <ul class="nav-menu">
+                <li><a href="about.html" class="nav-link">About</a></li>
+                <li><a href="#" class="nav-link" id="logout-btn">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="confirmation-content">
+            <div class="confirmation-header success">
+                <div class="checkmark">✓</div>
+                <h1>Report Submitted Successfully</h1>
+            </div>
+
+            <div class="confirmation-body">
+                <p class="confirmation-message">
+                    Thank you for submitting your report. We will review it and take appropriate action.
+                </p>
+
+                <div class="confirmation-details">
+                    <h2>Your Report ID</h2>
+                    <div class="report-id" id="report-id">Loading...</div>
+                </div>
+
+                <div class="report-summary">
+                    <h2>Report Summary</h2>
+                    <div class="summary-item" id="summary-incident">
+                        <strong>Incident Type:</strong>
+                        <span id="summary-incident-value">Loading...</span>
+                    </div>
+                    <div class="summary-item" id="summary-urgency">
+                        <strong>Urgency Level:</strong>
+                        <span id="summary-urgency-value">Loading...</span>
+                    </div>
+                </div>
+
+                <div class="routing-info">
+                    <h2>Routed To</h2>
+                    <p id="routing-info">Loading...</p>
+                    <p class="routing-note"><em>Our support team will review your report and may contact you.</em></p>
+                </div>
+
+                <div class="resources-section">
+                    <h2>Helpful Resources</h2>
+                    <div class="resources-list">
+                        <div class="resource">
+                            <h3>Crisis Text Line</h3>
+                            <p>Text HOME to 741741</p>
+                        </div>
+                        <div class="resource">
+                            <h3>National Suicide Prevention Lifeline</h3>
+                            <p>1-800-273-8255</p>
+                        </div>
+                        <div class="resource">
+                            <h3>Cyberbullying Resources</h3>
+                            <p>Visit cybertipline.org</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="confirmation-actions">
+                    <a href="home.html" class="btn btn-primary">Return to Dashboard</a>
+                </div>
+            </div>
+
+            <div class="disclaimer">
+                <strong>⚠️ REMINDER:</strong> This is not an emergency service. If you are in immediate danger, call 911.
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Map for routing options
+        const routingMap = {
+            'parent': 'Parent',
+            'teacher': 'Teacher',
+            'school-admin': 'School Administration',
+            'local-services': 'Local Support Services',
+            'emergency': 'Emergency Services'
+        };
+
+        // Resources based on urgency level
+        const resourcesByUrgency = {
+            'high': [
+                { title: 'National Suicide Prevention Lifeline', info: '1-800-273-8255' },
+                { title: 'Crisis Text Line', info: 'Text HOME to 741741' },
+                { title: 'National Crisis Hotline', info: '1-800-799-7233' }
+            ],
+            'medium': [
+                { title: 'Crisis Text Line', info: 'Text HOME to 741741' },
+                { title: 'SAMHSA National Helpline', info: '1-800-662-4357' },
+                { title: 'Cyberbullying Resources', info: 'Visit cybertipline.org' }
+            ],
+            'low': [
+                { title: 'Cyberbullying Resources', info: 'Visit cybertipline.org' },
+                { title: 'School Resources', info: 'Visit your school counselor' },
+                { title: 'Mental Health Support', info: 'Visit mentalhealth.gov' }
+            ]
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+
+            // Get report ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const reportId = urlParams.get('id');
+
+            if (reportId) {
+                document.getElementById('report-id').textContent = `#${reportId}`;
+            }
+
+            // Retrieve report data from localStorage
+            const lastReport = localStorage.getItem('lastReport');
+            
+            if (lastReport) {
+                try {
+                    const reportData = JSON.parse(lastReport);
+                    
+                    // Display routing information
+                    const routingLabel = routingMap[reportData.routingOption] || reportData.routingOption;
+                    document.getElementById('routing-info').innerHTML = `
+                        <strong>Routed to:</strong> ${routingLabel}
+                        <br>
+                        <strong>Incident Type:</strong> ${reportData.incidentType.charAt(0).toUpperCase() + reportData.incidentType.slice(1).replace(/-/g, ' ')}
+                        <br>
+                        <strong>Urgency Level:</strong> ${reportData.urgencyLevel.charAt(0).toUpperCase() + reportData.urgencyLevel.slice(1)}
+                    `;
+
+                    // Display dynamic resources based on urgency level
+                    const resourceList = document.querySelector('.resources-list');
+                    resourceList.innerHTML = '';
+                    
+                    const urgencyResources = resourcesByUrgency[reportData.urgencyLevel] || resourcesByUrgency['low'];
+                    urgencyResources.forEach(resource => {
+                        resourceList.innerHTML += `
+                            <div class="resource">
+                                <h3>${resource.title}</h3>
+                                <p>${resource.info}</p>
+                            </div>
+                        `;
+                    });
+
+                    // Add additional info section if not anonymous
+                    if (!reportData.isAnonymous) {
+                        const routingNote = document.querySelector('.routing-note');
+                        routingNote.innerHTML = `<em>Your report has been logged under your name. Our support team will review it and may contact you.</em>`;
+                    }
+                } catch (error) {
+                    console.error('Error parsing report data:', error);
+                    document.getElementById('routing-info').textContent = 'Your report has been received and will be reviewed.';
+                }
+            } else {
+                document.getElementById('routing-info').textContent = 'Your report has been received and will be reviewed.';
+            }
+
+            document.getElementById('logout-btn').addEventListener('click', (e) => {
+                e.preventDefault();
+                logout();
+            });
+        });
+    </script>
+</body>
+</html>

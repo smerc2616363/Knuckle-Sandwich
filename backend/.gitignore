@@ -1,0 +1,10 @@
+node_modules/
+.env.local
+.env.*.local
+knuckle_sandwich.db
+knuckle_sandwich.db-journal
+*.log
+dist/
+.DS_Store
+.vscode/
+.idea/

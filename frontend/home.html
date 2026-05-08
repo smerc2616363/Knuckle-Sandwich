@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knuckle Sandwich - Home</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="home.html" class="nav-logo">Knuckle Sandwich</a>
+            <ul class="nav-menu">
+                <li><a href="about.html" class="nav-link">About</a></li>
+                <li><a href="#" class="nav-link" id="logout-btn">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="home-content">
+            <h1>Welcome to Knuckle Sandwich</h1>
+            <p class="subtitle">A safe platform to report incidents and get support</p>
+
+            <div class="disclaimer">
+                <strong>⚠️ DISCLAIMER:</strong> This is not an emergency service. If you are in immediate danger, call 911.
+            </div>
+
+            <div class="cta-section">
+                <button id="report-btn" class="btn btn-large btn-primary">Report an Incident</button>
+            </div>
+
+            <div class="info-section">
+                <h2>How it works</h2>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <p><strong>Report:</strong> Fill out an incident report with details</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <p><strong>Route:</strong> Select or confirm routing to appropriate support</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <p><strong>Support:</strong> Receive confirmation and relevant resources</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.getElementById('logout-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            logout();
+        });
+
+        document.getElementById('report-btn').addEventListener('click', () => {
+            window.location.href = 'report.html';
+        });
+
+        // Check if user is authenticated on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+        });
+    </script>
+</body>
+</html>

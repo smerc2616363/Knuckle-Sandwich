@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knuckle Sandwich - About</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">Knuckle Sandwich</a>
+            <ul class="nav-menu">
+                <li><a href="about.html" class="nav-link">About</a></li>
+                <li id="auth-link" style="display: none;"><a href="home.html" class="nav-link">Dashboard</a></li>
+                <li id="login-link"><a href="index.html" class="nav-link">Login</a></li>
+                <li id="logout-link" style="display: none;"><a href="#" class="nav-link" onclick="logout(); return false;">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="about-content">
+            <h1>About Knuckle Sandwich</h1>
+
+            <section class="about-section">
+                <h2>What We Do</h2>
+                <p>
+                    Knuckle Sandwich is a web-based platform designed to help students and young people report incidents safely and efficiently. 
+                    We provide a structured way to report concerns and connect with appropriate support resources.
+                </p>
+            </section>
+
+            <section class="about-section">
+                <h2>Our Mission</h2>
+                <p>
+                    To create a safe space where individuals can report incidents, receive acknowledgment, and be connected 
+                    with the right resources to help them.
+                </p>
+            </section>
+
+            <section class="about-section">
+                <h2>Key Features</h2>
+                <ul>
+                    <li><strong>Secure Reporting:</strong> Report incidents with your choice of anonymity</li>
+                    <li><strong>Smart Routing:</strong> Get connected to the right support service</li>
+                    <li><strong>Confidentiality:</strong> Your information is protected and encrypted</li>
+                    <li><strong>Confirmation & Resources:</strong> Receive support information after submission</li>
+                </ul>
+            </section>
+
+            <section class="about-section">
+                <h2>Supported Routing Options</h2>
+                <ul>
+                    <li>Parent</li>
+                    <li>Teacher</li>
+                    <li>School Administration</li>
+                    <li>Local Support Services</li>
+                    <li>Emergency Services (manual selection)</li>
+                </ul>
+            </section>
+
+            <div class="disclaimer">
+                <strong>⚠️ DISCLAIMER:</strong> This is not an emergency service. If you are in immediate danger, call 911.
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Update nav links based on auth status
+            fetch('/api/auth/me')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.userId) {
+                        document.getElementById('auth-link').style.display = 'block';
+                        document.getElementById('login-link').style.display = 'none';
+                        document.getElementById('logout-link').style.display = 'block';
+                    }
+                })
+                .catch(() => {
+                    document.getElementById('login-link').style.display = 'block';
+                    document.getElementById('logout-link').style.display = 'none';
+                });
+        });
+    </script>
+</body>
+</html>
